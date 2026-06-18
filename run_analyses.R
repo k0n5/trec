@@ -972,27 +972,6 @@ if (config$run_find_trec_krec){
     # ============================================================================
     # PER-LOCUS QC FUNNEL TABLE
     # ============================================================================
-    # Two-stage locus model:
-    #
-    #   "Funnel locus": the unit used for read counting and circle-read
-    #     bookkeeping pre- and post-QC. TCRA + TCRD are merged into a single
-    #     funnel locus called "TRA_TRD", matching the windows TSV convention.
-    #
-    #   "Classification locus": the unit used for the final n_circle_classified
-    #     count. Here TRA and TRD are SEPARATE (TRECa vs TRECd).
-    #
-    # Final table layout: one row per classification locus. For TRA and TRD,
-    # the first three columns (n_reads_in_locus, n_circle_pre_qc,
-    # n_circle_post_qc) are taken from the shared TRA_TRD funnel locus and
-    # therefore are IDENTICAL between the TRA and TRD rows. Only the
-    # n_circle_classified column differs between them.
-    #
-    # Naming note:
-    #   - BED uses TCRA / TCRD / TCRB / TCRG / IGH / IGK / IGL
-    #   - We rename TCR* -> TR* and merge TCRA + TCRD -> "TRA_TRD" for funnel
-    #     accounting, then split into TRA / TRD for classification only.
-    # ============================================================================
-    
     cat("\nBuilding per-locus QC funnel table ...\n")
     
     # --- BED region name -> funnel locus --------------------------------------
@@ -1260,19 +1239,6 @@ if (config$run_find_dup_del){
   # ============================================================================
   # FIND DELETION-SUPPORTING SPLIT READS
   # ============================================================================
-  # Signature (same strand, same chromosome):
-  #   strand.p == "+":  first_pos < second_pos  (read goes forward; reference also forward;
-  #                                              a chunk of reference is skipped between halves)
-  #   strand.p == "-":  first_pos > second_pos
-  # This is the OPPOSITE of the circle signature.
-  #
-  # Mate consistency for deletions (per user's spec):
-  #   When first-on-read is upstream of second-on-read on the reference (i.e. + strand
-  #   primary alignment of the split read), the mate of the split read should sit
-  #   FURTHER DOWNSTREAM than the second-on-read reference end, on the opposite strand.
-  #   When first-on-read is downstream of second-on-read (i.e. - strand split read),
-  #   the mate should sit FURTHER UPSTREAM than the second-on-read start, on the opposite strand.
-  # This places the mate on the far flank of the deletion, in proper FR orientation.
   
   find_deletion_split_reads <- function(reads, config) {
     cat("Scanning for deletion-supporting split reads ...\n")
