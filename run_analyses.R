@@ -33,53 +33,6 @@ config <- list(
   max_unaligned_frac = as.numeric(parse_opt(args, "--max_unaligned_frac", 0.20))
 )
 
-# setwd("~/Documents/ukb-kh-sandbox/")
-# old_path <- Sys.getenv("PATH")
-# Sys.setenv(PATH = paste("/Users/konstantin/miniforge3/bin", old_path, sep = ":"))
-# config <- list(
-#   # bam_file        = "trec-filtering/10/1002158.wgs.agrec.bam",
-#   bam_file        = "trec-filtering/10/1004467.wgs.agrec.bam",
-#   #bam_file        = "trec-filtering/10/1002158.wgs.agrec.bam",
-#   # bam_file        = "trec-filtering/10/1004764.wgs.agrec.bam", # has 2 TREC
-#   # bam_file = "thym.bcrtcr.bam",
-#   regions_bed     = "../trec/make-annotations/immunelens_regions_hg38_extended_260503.bed",
-#   windows_tsv     = "../trec/make-annotations/bcrtcr_regions_named_windows800_260519.tsv",
-#   output_prefix   = "t35t/thym",
-#   sample_name   = "thym",
-#   run_extrect     = F,
-#   run_immunelens  = T,
-#   run_bam_read_counts = T,
-#   run_bam_mapping_stats = T,
-#   run_find_trec_krec = T,
-#   make_circle_funnel = T,
-#   run_find_dup_del = T,
-#   min_mapq        = 40L,
-#   min_distance    = 1000L,
-#   max_nm          = 15,
-#   max_unaligned_frac = 0.2
-# )
-
-# setwd("/data1/lareauc/projects/viral_discovery/impact/kh_trec/")
-# old_path <- Sys.getenv("PATH")
-# Sys.setenv(PATH = paste("/home/helmsak1/.conda/envs/lowcov/bin", old_path, sep = ":"))
-# config <- list(
-#   bam_file = "data/gtex-bam/GTEX-12WSD-0002-SM-6WSCG.calmd.cram.bam",
-#   regions_bed     = "immunelens_regions_hg38_extended_260503.bed",
-#   windows_tsv     = "bcrtcr_regions_named_260502_windows800.tsv",
-#   output_prefix   = "toydata/gtextest",
-#   sample_name   = "gtextest",
-#   run_extrect     = T,
-#   run_immunelens  = F,
-#   run_bam_read_counts = F,
-#   run_bam_mapping_stats = F,
-#   run_find_trec_krec = F,
-#   make_circle_funnel = F,
-#   run_find_dup_del = F,
-#   min_mapq        = 40L,
-#   min_distance    = 1000L,
-#   max_nm          = 15,
-#   max_unaligned_frac = 0.2
-# )
 
 if (config$make_circle_funnel & !config$run_find_trec_krec) stop("If make_circle_funnel is set, run_find_trec_krec must also be set.")
 
@@ -295,7 +248,6 @@ regions_gr <- rtracklayer::import(config$regions_bed, format = "BED")
 # ============================================================================
 # READ BAM
 # ============================================================================
-
 if (config$run_bam_read_counts | config$run_bam_mapping_stats | config$run_find_trec_krec | config$run_find_dup_del){
   stopifnot("BAM file does not exist"  = file.exists(config$bam_file))
   stopifnot("windows_tsv file does not exist"  = file.exists(config$windows_tsv))
@@ -444,7 +396,6 @@ if (config$run_bam_read_counts){
 # ------------------------------------------------------------------------------
 # run_bam_mapping_stats
 # ------------------------------------------------------------------------------
-
 if (config$run_bam_mapping_stats){
   out_file <- paste0(config$output_prefix, ".properpair_mapping_stats.tsv")
   reads %>%
